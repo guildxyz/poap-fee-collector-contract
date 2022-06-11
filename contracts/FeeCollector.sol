@@ -43,7 +43,7 @@ contract FeeCollector is IFeeCollector {
     }
 
     function payFee(uint256 vaultId) external payable {
-        if (vaultId >= vaults.length || vaults[vaultId].owner == address(0)) revert VaultDoesNotExist(vaultId);
+        if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
 
         uint256 requiredAmount = vaults[vaultId].fee;
         vaults[vaultId].collected += uint128(requiredAmount);
@@ -63,8 +63,7 @@ contract FeeCollector is IFeeCollector {
     }
 
     function withdraw(uint256 vaultId) external {
-        address eventOwner = vaults[vaultId].owner;
-        if (vaultId >= vaults.length || eventOwner == address(0)) revert VaultDoesNotExist(vaultId);
+        if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
 
         uint256 collected = vaults[vaultId].collected;
         vaults[vaultId].collected = 0;
@@ -75,8 +74,8 @@ contract FeeCollector is IFeeCollector {
 
         // If the tokenAddress is zero, the collected fees are in Ether, otherwise in ERC20.
         address tokenAddress = vaults[vaultId].token;
-        if (tokenAddress == address(0)) _withdrawEther(guildAmount, poapAmount, ownerAmount, eventOwner);
-        else _withdrawToken(guildAmount, poapAmount, ownerAmount, eventOwner, tokenAddress);
+        if (tokenAddress == address(0)) _withdrawEther(guildAmount, poapAmount, ownerAmount, vaults[vaultId].owner);
+        else _withdrawToken(guildAmount, poapAmount, ownerAmount, vaults[vaultId].owner, tokenAddress);
 
         emit Withdrawn(vaultId, guildAmount, poapAmount, ownerAmount);
     }
@@ -116,11 +115,13 @@ contract FeeCollector is IFeeCollector {
             uint128 collected
         )
     {
+        if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
         Vault storage vault = vaults[vaultId];
         return (vault.eventId, vault.owner, vault.token, vault.fee, vault.collected);
     }
 
     function hasPaid(uint256 vaultId, address account) external view returns (bool paid) {
+        if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
         return vaults[vaultId].paid[account];
     }
 
