@@ -68,7 +68,7 @@ contract FeeCollector is IFeeCollector {
         uint256 collected = vaults[vaultId].collected;
         vaults[vaultId].collected = 0;
 
-        uint256 guildAmount = (collected * poapSharex100) / 10000;
+        uint256 guildAmount = (collected * guildSharex100) / 10000;
         uint256 poapAmount = (collected * poapSharex100) / 10000;
         uint256 ownerAmount = collected - poapAmount - guildAmount;
 
