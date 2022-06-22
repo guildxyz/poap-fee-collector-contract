@@ -16,6 +16,10 @@ contract FeeCollector is IFeeCollector {
 
     Vault[] internal vaults;
 
+    /// @param guildFeeCollector_ The address that will receive Guild's share from the funds.
+    /// @param guildSharex100_ The percentage of Guild's share multiplied by 100 (e.g 500 for a 5% cut).
+    /// @param poapFeeCollector_ The address that will receive POAP's share from the funds.
+    /// @param poapSharex100_ The percentage of POAP's share multiplied by 100 (e.g 500 for a 5% cut).
     constructor(
         address payable guildFeeCollector_,
         uint96 guildSharex100_,
@@ -39,6 +43,7 @@ contract FeeCollector is IFeeCollector {
         vault.owner = owner;
         vault.token = token;
         vault.fee = fee;
+
         emit VaultRegistered(vaults.length - 1, eventId, owner, token, fee);
     }
 
@@ -68,6 +73,7 @@ contract FeeCollector is IFeeCollector {
         uint256 collected = vaults[vaultId].collected;
         vaults[vaultId].collected = 0;
 
+        // Calculate fees to receive. Guild's and Poap's part is truncated - the remainder goes to the owner (max 2 wei).
         uint256 guildAmount = (collected * guildSharex100) / 10000;
         uint256 poapAmount = (collected * poapSharex100) / 10000;
         uint256 ownerAmount = collected - poapAmount - guildAmount;
