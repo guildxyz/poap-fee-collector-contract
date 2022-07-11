@@ -211,7 +211,7 @@ contract("FeeCollector", function (accounts) {
   context("setting fee collectors and their share", async function () {
     context("Guild's fee collector", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error OnlyOwner(address sender, address owner);
+        // error AccessDenied(address sender, address owner);
         await expectRevert.unspecified(feeCollector.setGuildFeeCollector(accounts[5]));
       });
 
@@ -229,7 +229,7 @@ contract("FeeCollector", function (accounts) {
 
     context("Guild's share", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error OnlyOwner(address sender, address owner);
+        // error AccessDenied(address sender, address owner);
         await expectRevert.unspecified(feeCollector.setGuildSharex100("100"));
       });
 
@@ -247,7 +247,7 @@ contract("FeeCollector", function (accounts) {
 
     context("Poap's fee collector", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error OnlyOwner(address sender, address owner);
+        // error AccessDenied(address sender, address owner);
         await expectRevert.unspecified(feeCollector.setPoapFeeCollector(accounts[5]));
       });
 
@@ -265,7 +265,7 @@ contract("FeeCollector", function (accounts) {
 
     context("Poap's share", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error OnlyOwner(address sender, address owner);
+        // error AccessDenied(address sender, address owner);
         await expectRevert.unspecified(feeCollector.setPoapSharex100("100"));
       });
 

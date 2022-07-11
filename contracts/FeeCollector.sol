@@ -89,25 +89,25 @@ contract FeeCollector is IFeeCollector {
     }
 
     function setGuildFeeCollector(address payable newFeeCollector) external {
-        if (msg.sender != guildFeeCollector) revert OnlyOwner(msg.sender, guildFeeCollector);
+        if (msg.sender != guildFeeCollector) revert AccessDenied(msg.sender, guildFeeCollector);
         guildFeeCollector = newFeeCollector;
         emit GuildFeeCollectorChanged(newFeeCollector);
     }
 
     function setGuildSharex100(uint96 newShare) external {
-        if (msg.sender != guildFeeCollector) revert OnlyOwner(msg.sender, guildFeeCollector);
+        if (msg.sender != guildFeeCollector) revert AccessDenied(msg.sender, guildFeeCollector);
         guildSharex100 = newShare;
         emit GuildSharex100Changed(newShare);
     }
 
     function setPoapFeeCollector(address payable newFeeCollector) external {
-        if (msg.sender != poapFeeCollector) revert OnlyOwner(msg.sender, poapFeeCollector);
+        if (msg.sender != poapFeeCollector) revert AccessDenied(msg.sender, poapFeeCollector);
         poapFeeCollector = newFeeCollector;
         emit PoapFeeCollectorChanged(newFeeCollector);
     }
 
     function setPoapSharex100(uint96 newShare) external {
-        if (msg.sender != poapFeeCollector) revert OnlyOwner(msg.sender, poapFeeCollector);
+        if (msg.sender != poapFeeCollector) revert AccessDenied(msg.sender, poapFeeCollector);
         poapSharex100 = newShare;
         emit PoapSharex100Changed(newShare);
     }

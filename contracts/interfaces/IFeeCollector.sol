@@ -138,7 +138,7 @@ interface IFeeCollector {
     /// @notice Error thrown when a function is attempted to be called by the wrong address.
     /// @param sender The address that sent the transaction.
     /// @param owner The address that is allowed to call the function.
-    error OnlyOwner(address sender, address owner);
+    error AccessDenied(address sender, address owner);
 
     /// @notice Error thrown when an ERC20 transfer failed.
     /// @param from The sender of the token.
