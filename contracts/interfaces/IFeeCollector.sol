@@ -14,7 +14,7 @@ interface IFeeCollector {
     /// @notice Registers a POAP drop and it's fee.
     /// @param eventId The id of the POAP drop.
     /// @param owner The address that receives the fees from the drop.
-    /// @param token Ether if 0, otherwise an ERC20 token.
+    /// @param token The zero address for Ether, otherwise an ERC20 token.
     /// @param fee The amount of fee to pay in wei.
     function registerVault(
         uint256 eventId,
@@ -28,31 +28,35 @@ interface IFeeCollector {
     function payFee(uint256 vaultId) external payable;
 
     /// @notice Sets the address that receives Guild's share from the funds.
+    /// @dev Callable only by the current Guild fee collector.
     /// @param newFeeCollector The new address of guildFeeCollector.
     function setGuildFeeCollector(address payable newFeeCollector) external;
 
     /// @notice Sets Guild's share from the funds.
+    /// @dev Callable only by the Guild fee collector.
     /// @param newShare The percentual value multiplied by 100.
     function setGuildSharex100(uint96 newShare) external;
 
     /// @notice Sets the address that receives POAP's share from the funds.
+    /// @dev Callable only by the current POAP fee collector.
     /// @param newFeeCollector The new address of poapFeeCollector.
     function setPoapFeeCollector(address payable newFeeCollector) external;
 
     /// @notice Sets POAP's share from the funds.
+    /// @dev Callable only by the POAP fee collector.
     /// @param newShare The percentual value multiplied by 100.
     function setPoapSharex100(uint96 newShare) external;
 
     /// @notice Distributes the funds from a vault to the fee collectors and the owner.
-    /// @param vaultId The id of the vault who's funds should be distributed.
+    /// @param vaultId The id of the vault whose funds should be distributed.
     function withdraw(uint256 vaultId) external;
 
     /// @notice Returns a vault's details.
     /// @param vaultId The id of the queried vault.
     /// @return eventId The id of the POAP drop.
     /// @return owner The owner of the vault who recieves the funds.
-    /// @return token The address of the token to receive funds in (0 in case of Ether).
-    /// @return fee The amount of funds to accepted in wei.
+    /// @return token The address of the token to receive funds in (the zero address in case of Ether).
+    /// @return fee The amount of required funds in wei.
     /// @return collected The amount of already collected funds.
     function getVault(uint256 vaultId)
         external
@@ -107,7 +111,7 @@ interface IFeeCollector {
     /// @notice Event emitted when a new vault is registered.
     /// @param eventId The id of the POAP drop.
     /// @param owner The address that receives the fees from the drop.
-    /// @param token Ether if 0, otherwise an ERC20 token.
+    /// @param token The zero address for Ether, otherwise an ERC20 token.
     /// @param fee The amount of fee to pay in wei.
     event VaultRegistered(
         uint256 vaultId,
