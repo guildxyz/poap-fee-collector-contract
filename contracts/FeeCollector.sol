@@ -50,17 +50,18 @@ contract FeeCollector is IFeeCollector {
     function payFee(uint256 vaultId) external payable {
         if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
 
-        uint256 requiredAmount = vaults[vaultId].fee;
-        vaults[vaultId].collected += uint128(requiredAmount);
-        vaults[vaultId].paid[msg.sender] = true;
+        Vault storage vault = vaults[vaultId];
+        uint256 requiredAmount = vault.fee;
+        vault.collected += uint128(requiredAmount);
+        vault.paid[msg.sender] = true;
 
         // If the tokenAddress is zero, the payment should be in Ether, otherwise in ERC20.
-        address tokenAddress = vaults[vaultId].token;
+        address tokenAddress = vault.token;
         if (tokenAddress == address(0)) {
             if (msg.value != requiredAmount) revert IncorrectFee(vaultId, msg.value, requiredAmount);
         } else {
             if (msg.value != 0) revert IncorrectFee(vaultId, msg.value, 0);
-            if (!IERC20(vaults[vaultId].token).transferFrom(msg.sender, address(this), requiredAmount))
+            if (!IERC20(vault.token).transferFrom(msg.sender, address(this), requiredAmount))
                 revert TransferFailed(msg.sender, address(this));
         }
 
@@ -70,8 +71,9 @@ contract FeeCollector is IFeeCollector {
     function withdraw(uint256 vaultId) external {
         if (vaultId >= vaults.length) revert VaultDoesNotExist(vaultId);
 
-        uint256 collected = vaults[vaultId].collected;
-        vaults[vaultId].collected = 0;
+        Vault storage vault = vaults[vaultId];
+        uint256 collected = vault.collected;
+        vault.collected = 0;
 
         // Calculate fees to receive. Guild's and Poap's part is truncated - the remainder goes to the owner (max 2 wei).
         uint256 guildAmount = (collected * guildSharex100) / 10000;
@@ -79,9 +81,9 @@ contract FeeCollector is IFeeCollector {
         uint256 ownerAmount = collected - poapAmount - guildAmount;
 
         // If the tokenAddress is zero, the collected fees are in Ether, otherwise in ERC20.
-        address tokenAddress = vaults[vaultId].token;
-        if (tokenAddress == address(0)) _withdrawEther(guildAmount, poapAmount, ownerAmount, vaults[vaultId].owner);
-        else _withdrawToken(guildAmount, poapAmount, ownerAmount, vaults[vaultId].owner, tokenAddress);
+        address tokenAddress = vault.token;
+        if (tokenAddress == address(0)) _withdrawEther(guildAmount, poapAmount, ownerAmount, vault.owner);
+        else _withdrawToken(guildAmount, poapAmount, ownerAmount, vault.owner, tokenAddress);
 
         emit Withdrawn(vaultId, guildAmount, poapAmount, ownerAmount);
     }
