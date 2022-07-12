@@ -58,11 +58,13 @@ Networks can be configured in _truffle-config.js_. We've preconfigured the follo
 - `ethereum` (Ethereum Mainnet)
 - `goerli` (Görli Ethereum Testnet)
 - `kovan` (Kovan Ethereum Testnet)
+- `rinkeby` (Rinkeby Ethereum Testnet)
 - `ropsten` (Ropsten Ethereum Testnet)
-- `bsc` (Binance Smart Chain)
-- `bsctest` (Binance Smart Chain Testnet)
+- `bsc` (BNB Smart Chain)
+- `bsctest` (BNB Smart Chain Testnet)
 - `polygon` (Polygon Mainnet (formerly Matic))
 - `mumbai` (Matic Mumbai Testnet)
+- `gnosis` (Gnosis Chain (formerly xDai Chain))
 
 ### Note
 
