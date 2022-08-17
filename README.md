@@ -2,34 +2,21 @@
 
 A smart contract for registering POAP events, their fees and vaults that collect the paid funds.
 
-## Requirements
+## Setup
 
 To run the project you need:
 
 - [Node.js](https://nodejs.org/en/download) development environment (version 14 or newer).
 - [Truffle](https://www.trufflesuite.com/truffle) for compiling, deploying and testing (version 5.4.30 or newer).
-- (optional) [Ganache](https://github.com/trufflesuite/ganache/releases) environment for local testing (version 7.0.0 or newer).
-
-Your `.env` file should contain the following variables:
-
-```bash
-# The private key of your wallet.
-PRIVATE_KEY=
-
-# Your infura.io project ID for deploying to Ethereum networks.
-INFURA_ID=
-
-# Your API key for verification.
-ETHERSCAN_API_KEY=
-```
-
-## Setup
+- [Ganache](https://github.com/trufflesuite/ganache/releases) environment for local testing (version 7.0.0 or newer).
 
 Pull the repository from GitHub, then install its dependencies by executing this command:
 
 ```bash
 npm install
 ```
+
+Certain actions, like deploying to a public network or verifying source code on block explorers, need environment variables in a file named `.env`. See _[.env.example](.env.example)_ for more info.
 
 ### Some additional steps before deployment
 
@@ -52,7 +39,7 @@ To deploy the smart contracts to a network, replace _[networkName]_ in this comm
 truffle migrate --network [networkName]
 ```
 
-Networks can be configured in _truffle-config.js_. We've preconfigured the following:
+Networks can be configured in _[truffle-config.js](truffle-config.js)_. We've preconfigured the following:
 
 - `development` (for local testing)
 - `ethereum` (Ethereum Mainnet)
@@ -103,8 +90,8 @@ To run the unit tests written for this project, execute this command in a termin
 npm test
 ```
 
-To run the unit tests only in a specific file, just append the path to the command. For example, to run tests just for MyContract:
+To run the unit tests only in a specific file, just append the path to the command. For example, to run tests just for FeeCollector:
 
 ```bash
-npm test ./test/MyContractTest.js
+npm test ./test/FeeCollectorTest.js
 ```
