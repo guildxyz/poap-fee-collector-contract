@@ -1,4 +1,5 @@
 const { balance, BN, constants, ether, expectEvent, expectRevert } = require("@openzeppelin/test-helpers");
+const { expectRevertCustomError } = require("custom-error-test-helper");
 const expect = require("chai").expect;
 
 const BadERC20 = artifacts.require("MockBadERC20");
@@ -68,9 +69,8 @@ contract("FeeCollector", function (accounts) {
     });
 
     it("should revert if the vault does not exist", async function () {
-      // error VaultDoesNotExist(uint256 vaultId);
-      await expectRevert.unspecified(feeCollector.payFee("420"));
-      await expectRevert.unspecified(feeCollector.payFee("69", { value: fee }));
+      await expectRevertCustomError(FeeCollector, feeCollector.payFee("420"), "VaultDoesNotExist", [420]);
+      await expectRevertCustomError(FeeCollector, feeCollector.payFee("69", { value: fee }), "VaultDoesNotExist", [69]);
     });
 
     it("should save the paid amount and set paid state for the account", async function () {
@@ -96,9 +96,12 @@ contract("FeeCollector", function (accounts) {
     });
 
     it("should revert if an Ether payment has the incorrect amount", async function () {
-      // error IncorrectFee(uint256 vaultId, uint256 paid, uint256 requiredAmount);
-      await expectRevert.unspecified(feeCollector.payFee("1", { value: 42 }));
-      await expectRevert.unspecified(feeCollector.payFee("1"));
+      await expectRevertCustomError(FeeCollector, feeCollector.payFee("1", { value: 42 }), "IncorrectFee", [
+        1,
+        42,
+        fee
+      ]);
+      await expectRevertCustomError(FeeCollector, feeCollector.payFee("1"), "IncorrectFee", [1, 0, fee]);
     });
 
     it("should accept ERC20 and transfer it", async function () {
@@ -112,16 +115,22 @@ contract("FeeCollector", function (accounts) {
     });
 
     it("should revert if transaction value is non-zero when paying with ERC20", async function () {
-      // error IncorrectFee(uint256 vaultId, uint256 paid, uint256 requiredAmount);
-      await expectRevert.unspecified(feeCollector.payFee("0", { value: 555 }), { value: fee });
+      await expectRevertCustomError(
+        FeeCollector,
+        feeCollector.payFee("0", { value: 555 }),
+        "IncorrectFee",
+        [0, 555, 0]
+      );
     });
 
     it("should revert if token transfer returns false", async function () {
       const badToken = await BadERC20.new();
       await feeCollector.registerVault(eventId + 2, owner, badToken.address, fee);
       await badToken.approve(feeCollector.address, constants.MAX_UINT256);
-      // error TransferFailed(address from, address to);
-      await expectRevert.unspecified(feeCollector.payFee("2"));
+      await expectRevertCustomError(FeeCollector, feeCollector.payFee("2"), "TransferFailed", [
+        wallet0,
+        feeCollector.address
+      ]);
     });
 
     it("should emit a FeeReceived event", async function () {
@@ -211,8 +220,10 @@ contract("FeeCollector", function (accounts) {
   context("setting fee collectors and their share", async function () {
     context("Guild's fee collector", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error AccessDenied(address sender, address owner);
-        await expectRevert.unspecified(feeCollector.setGuildFeeCollector(accounts[5]));
+        await expectRevertCustomError(FeeCollector, feeCollector.setGuildFeeCollector(accounts[5]), "AccessDenied", [
+          wallet0,
+          guildFeeCollector
+        ]);
       });
 
       it("should change the address", async function () {
@@ -229,8 +240,10 @@ contract("FeeCollector", function (accounts) {
 
     context("Guild's share", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error AccessDenied(address sender, address owner);
-        await expectRevert.unspecified(feeCollector.setGuildSharex100("100"));
+        await expectRevertCustomError(FeeCollector, feeCollector.setGuildSharex100("100"), "AccessDenied", [
+          wallet0,
+          guildFeeCollector
+        ]);
       });
 
       it("should change the value", async function () {
@@ -247,8 +260,10 @@ contract("FeeCollector", function (accounts) {
 
     context("Poap's fee collector", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error AccessDenied(address sender, address owner);
-        await expectRevert.unspecified(feeCollector.setPoapFeeCollector(accounts[5]));
+        await expectRevertCustomError(FeeCollector, feeCollector.setPoapFeeCollector(accounts[5]), "AccessDenied", [
+          wallet0,
+          poapFeeCollector
+        ]);
       });
 
       it("should change the address", async function () {
@@ -265,8 +280,10 @@ contract("FeeCollector", function (accounts) {
 
     context("Poap's share", async function () {
       it("should revert if it's attempted to be changed by anyone else", async function () {
-        // error AccessDenied(address sender, address owner);
-        await expectRevert.unspecified(feeCollector.setPoapSharex100("100"));
+        await expectRevertCustomError(FeeCollector, feeCollector.setPoapSharex100("100"), "AccessDenied", [
+          wallet0,
+          poapFeeCollector
+        ]);
       });
 
       it("should change the value", async function () {
