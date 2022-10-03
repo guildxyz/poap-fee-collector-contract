@@ -58,8 +58,5 @@ jobs:
         run: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Install Truffle
-        run: npm install -g truffle ganache
-
       - name: Run tests
         run: npm test

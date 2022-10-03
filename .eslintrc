@@ -1,32 +1,29 @@
 {
-  "extends": ["standard"],
+  "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
   "env": {
     "browser": false,
     "node": true,
     "jest": true,
     "mocha": true
   },
-  "globals" : {
-    "artifacts": false,
-    "contract": false,
-    "assert": false,
-    "web3": false
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12
   },
   "rules": {
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "ignore"
-    }],
-    "indent": ["error", 2, {"SwitchCase": 1 }],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "jsx-quotes": [2, "prefer-double"],
     "prefer-promise-reject-errors": 0,
     "quotes": [2, "double"],
     "import/export": 0,
     "no-useless-constructor": 1,
     "handle-callback-err": 1,
-    "max-len" : ["error", { "code": 120 }]
+    "max-len": ["error", { "code": 120 }],
+    "func-names": "off",
+    "no-console": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "node/no-unpublished-import": "off",
+    "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }]
   }
 }

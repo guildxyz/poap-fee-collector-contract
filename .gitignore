@@ -1,4 +1,9 @@
-build
 node_modules
-.vscode
 .env
+coverage
+coverage.json
+typechain
+
+#Hardhat files
+cache
+artifacts

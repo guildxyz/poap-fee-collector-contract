@@ -1,1 +1,6 @@
-node_modules/*
+node_modules
+artifacts
+cache
+coverage*
+gasReporterOutput.json
+docs/templates
