@@ -2,13 +2,11 @@
 
 A smart contract for registering POAP events, their fees and vaults that collect the paid funds.
 
+A detailed documentation of the contract can be found in the _[docs](docs)_ folder.
+
 ## Setup
 
-To run the project you need:
-
-- [Node.js](https://nodejs.org/en/download) development environment (version 14 or newer).
-- [Truffle](https://www.trufflesuite.com/truffle) for compiling, deploying and testing (version 5.4.30 or newer).
-- [Ganache](https://github.com/trufflesuite/ganache/releases) environment for local testing (version 7.0.0 or newer).
+To run the project you need [Node.js](https://nodejs.org) development environment.
 
 Pull the repository from GitHub, then install its dependencies by executing this command:
 
@@ -20,7 +18,7 @@ Certain actions, like deploying to a public network or verifying source code on 
 
 ### Some additional steps before deployment
 
-Open migrations/2_deploy_fee_collector.js. Notice the top four constants:
+Open _scripts/deploy-feecollector.ts_. Notice the top four constants:
 
 ```js
 const guildFeeCollector = "0x..."; // The address that will receive Guild's share from the funds.
@@ -33,18 +31,17 @@ Edit them according to your needs.
 
 ## Contract deployment
 
-To deploy the smart contracts to a network, replace _[networkName]_ in this command:
+To deploy the smart contracts to a network, replace _[networkName]_ with the name of the network and _[scriptName]_ with the name of the script you wish to run in this command:
 
 ```bash
-truffle migrate --network [networkName]
+npx hardhat run scripts/[scriptName] --network [networkName]
 ```
 
-Networks can be configured in _[truffle-config.js](truffle-config.js)_. We've preconfigured the following:
+Networks can be configured in _[hardhat.config.ts](hardhat.config.ts)_. We've preconfigured the following:
 
-- `development` (for local testing)
+- `hardhat` (for local testing, default)
 - `ethereum` (Ethereum Mainnet)
 - `goerli` (Görli Ethereum Testnet)
-- `kovan` (Kovan Ethereum Testnet)
 - `rinkeby` (Rinkeby Ethereum Testnet)
 - `ropsten` (Ropsten Ethereum Testnet)
 - `bsc` (BNB Smart Chain)
@@ -53,33 +50,36 @@ Networks can be configured in _[truffle-config.js](truffle-config.js)_. We've pr
 - `mumbai` (Matic Mumbai Testnet)
 - `gnosis` (Gnosis Chain (formerly xDai Chain))
 
-### Note
-
-The above procedure deploys all the contracts. If you want to deploy only specific contracts, you can run only the relevant script(s) via the below command:
-
-```bash
-truffle migrate -f [start] --to [end] --network [name]
-```
-
-Replace _[start]_ with the number of the first and _[end]_ with the number of the last migration script you wish to run. To run only one script, _[start]_ and _[end]_ should match. The numbers of the scripts are:
-
-- 1 - Migrations
-- 2 - FeeCollector
-
 ## Verification
 
-For automatic verification you can use [truffle plugin verify](https://github.com/rkalis/truffle-plugin-verify).
+For source code verification on block explorers, you can use the Etherscan plugin:
 
 ```bash
-truffle run verify [contractName] --network [networkName]
+npx hardhat verify [contractAddress] [constructorArguments] --network [networkName]
 ```
+
+Note: the contract's address and the constructor arguments are printed by the deploy script, so they can easily be copied to this command.
+
+For more detailed instructions, check out the plugin's documentation [here](https://hardhat.org/plugins/nomiclabs-hardhat-etherscan#usage).
 
 ## Linting
 
-The project uses [solhint](https://github.com/protofire/solhint). To run it, simply execute:
+The project uses [Solhint](https://github.com/protofire/solhint) for Solidity smart contracts and [ESLint](https://eslint.org) for TypeScript files. To lint all files, simply execute:
 
 ```bash
 npm run lint
+```
+
+To lint only the Solidity files:
+
+```bash
+npm run lint-contracts
+```
+
+To lint only the TypeScript files:
+
+```bash
+npm run lint-ts
 ```
 
 ## Tests
@@ -93,5 +93,15 @@ npm test
 To run the unit tests only in a specific file, just append the path to the command. For example, to run tests just for FeeCollector:
 
 ```bash
-npm test ./test/FeeCollectorTest.js
+npm test test/FeeCollector.spec.ts
 ```
+
+## Documentation
+
+The documentation for the contracts is generated via the [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) package. Run the tool via the following command:
+
+```bash
+npm run docgen
+```
+
+The output can be found in the _[docs](docs)_ folder.
