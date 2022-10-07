@@ -61,7 +61,7 @@ contract FeeCollector is IFeeCollector {
             if (msg.value != requiredAmount) revert IncorrectFee(vaultId, msg.value, requiredAmount);
         } else {
             if (msg.value != 0) revert IncorrectFee(vaultId, msg.value, 0);
-            if (!IERC20(vault.token).transferFrom(msg.sender, address(this), requiredAmount))
+            if (!IERC20(tokenAddress).transferFrom(msg.sender, address(this), requiredAmount))
                 revert TransferFailed(msg.sender, address(this));
         }
 
