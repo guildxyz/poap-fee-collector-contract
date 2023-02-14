@@ -8,7 +8,6 @@ const poapSharex100 = 0; // The percentage of POAP's share multiplied by 100 (e.
 
 async function main() {
   const FeeCollector = await ethers.getContractFactory("FeeCollector");
-  const feeCollector = await FeeCollector.deploy(guildFeeCollector, guildSharex100, poapFeeCollector, poapSharex100);
 
   console.log(
     `Deploying contract to ${
@@ -16,6 +15,7 @@ async function main() {
     }...`
   );
 
+  const feeCollector = await FeeCollector.deploy(guildFeeCollector, guildSharex100, poapFeeCollector, poapSharex100);
   await feeCollector.deployed();
 
   console.log("FeeCollector deployed to:", feeCollector.address);
