@@ -1,3 +1,8 @@
+> # DEPRECATION NOTICE
+>
+> The contents of this repository are superseded by [agoraxyz/generic-fee-collector-contract](https://github.com/agoraxyz/generic-fee-collector-contract).  
+> For the version that was used in production, check [releases](https://github.com/agoraxyz/poap-fee-collector-contract/releases).
+
 # POAP fee collector smart contract
 
 A smart contract for registering POAP events, their fees and vaults that collect the paid funds.
